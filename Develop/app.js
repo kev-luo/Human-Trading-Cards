@@ -39,7 +39,7 @@ const manager = [
     },
     {
         type:'input',
-        name:'managerOffice',
+        name:'office',
         message:"What is your manager's office number?",
     }
 ]
@@ -62,7 +62,7 @@ const engineer = [
     },
     {
         type:'input',
-        name:'engineerGithub',
+        name:'github',
         message:"What is your engineer's Github username?",
     }
 ]
@@ -85,7 +85,7 @@ const intern = [
     },
     {
         type:'input',
-        name:'InternSchool',
+        name:'school',
         message:"What is your intern's school?",
     }
 ]
@@ -96,15 +96,33 @@ const questions = {Manager:manager, Engineer:engineer, Intern:intern}
 // asks user what team member they'd like to add next
 function newMemberChoice() {
     inquirer.prompt(nextMember).then(answer => {
-        newMemberQuestions(answer.newMember);
+        (answer.newMember !== 'No more team members to add') ?
+            newMemberQuestions(answer.newMember): 
+            console.log('I present to you: the Dream Team', teamMembers);
     })
 }
 // asks user team member specific questions
 function newMemberQuestions(choice) {
     inquirer.prompt(questions[choice]).then(answer => {
-        teamMembers.push(answer.name)
-        console.log(teamMembers);
+        newObjects(answer,choice);
     })
+}
+// create new objects
+function newObjects(person,choice) {
+    let addToTeam;
+    switch (choice) {
+        case 'Manager':
+            addToTeam = new Manager(person.name,person.id,person.email,person.office);
+            break;
+        case 'Intern':
+            addToTeam = new Intern(person.name,person.id,person.email,person.school)
+            break;
+        case 'Engineer':
+            addToTeam = new Engineer(person.name,person.id,person.email,person.github)
+            break;
+    }
+    teamMembers.push(addToTeam)
+    newMemberChoice();
 }
 // begin application
 function beginApp() {

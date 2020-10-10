@@ -13,5 +13,5 @@ class Engineer extends Employee {
         return this.github;
     }
 }
-
+const kev = new Engineer('kevin',24,'kvn@gmail.com','kev-luo')
 module.exports = Engineer;
