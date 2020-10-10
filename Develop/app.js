@@ -98,16 +98,21 @@ function newMemberChoice() {
     inquirer.prompt(nextMember).then(answer => {
         (answer.newMember !== 'No more team members to add') ?
             newMemberQuestions(answer.newMember): 
-            console.log('I present to you: the Dream Team', teamMembers);
+            fs.writeFile('./output/team.html',render(teamMembers),(err,data) => {
+                if (err) throw err;
+                console.log('I present to you: the Dream Team');
+            });
     })
 }
+
 // asks user team member specific questions
 function newMemberQuestions(choice) {
     inquirer.prompt(questions[choice]).then(answer => {
         newObjects(answer,choice);
     })
 }
-// create new objects
+
+// create new objects from user responses
 function newObjects(person,choice) {
     let addToTeam;
     switch (choice) {
@@ -124,6 +129,7 @@ function newObjects(person,choice) {
     teamMembers.push(addToTeam)
     newMemberChoice();
 }
+
 // begin application
 function beginApp() {
     if (teamMembers.length === 0) {
@@ -150,8 +156,3 @@ beginApp();
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
