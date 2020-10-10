@@ -10,7 +10,111 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let teamMembers = [];
 
+// questions ==================================================
+const nextMember = 
+{
+    type:'list',
+    name:'newMember',
+    message:'What kind of team member would you like to add?',
+    choices: ['Manager','Engineer','Intern','No more team members to add']
+}
+
+const manager = [
+    {
+        type:'input',
+        name:'name',
+        message:"What is your manager's name?",
+    },
+    {
+        type:'input',
+        name:'id',
+        message:"What is your manager's id?",
+    },
+    {
+        type:'input',
+        name:'email',
+        message:"What is your manager's email?",
+    },
+    {
+        type:'input',
+        name:'managerOffice',
+        message:"What is your manager's office number?",
+    }
+]
+
+const engineer = [
+    {
+        type:'input',
+        name:'name',
+        message:"What is your engineer's name?",
+    },
+    {
+        type:'input',
+        name:'id',
+        message:"What is your engineer's id?",
+    },
+    {
+        type:'input',
+        name:'email',
+        message:"What is your engineer's email?",
+    },
+    {
+        type:'input',
+        name:'engineerGithub',
+        message:"What is your engineer's Github username?",
+    }
+]
+
+const intern = [
+    {
+        type:'input',
+        name:'name',
+        message:"What is your intern's name?",
+    },
+    {
+        type:'input',
+        name:'id',
+        message:"What is your intern's id?",
+    },
+    {
+        type:'input',
+        name:'email',
+        message:"What is your intern's email?",
+    },
+    {
+        type:'input',
+        name:'InternSchool',
+        message:"What is your intern's school?",
+    }
+]
+const questions = {Manager:manager, Engineer:engineer, Intern:intern}
+
+// inquirer ===================================================
+
+// asks user what team member they'd like to add next
+function newMemberChoice() {
+    inquirer.prompt(nextMember).then(answer => {
+        newMemberQuestions(answer.newMember);
+    })
+}
+// asks user team member specific questions
+function newMemberQuestions(choice) {
+    inquirer.prompt(questions[choice]).then(answer => {
+        teamMembers.push(answer.name)
+        console.log(teamMembers);
+    })
+}
+// begin application
+function beginApp() {
+    if (teamMembers.length === 0) {
+        console.log('Please build your team');
+    }
+    newMemberChoice();
+}
+
+beginApp();
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
