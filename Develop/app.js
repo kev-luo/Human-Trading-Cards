@@ -12,147 +12,157 @@ const render = require("./lib/htmlRenderer");
 
 let teamMembers = [];
 
+// inquirer validation tests =================================
+const onlyLetters = input => {
+  return (/^[a-zA-Z]+$/.test(input)) ? true : 'Name cannot contain characters besides letters.'
+}
+
+const cannotBeBlank = input => {
+  return (input.length !== 0) ? true : 'This field must be filled.'
+}
+
+const emailFormat = input => {
+  // must be non-white space, contain an @ symbol, followed by more non-white space, a period, and more non-white space
+  return (/\S+@\S+\.\S+/.test(input)) ? true : 'Must be a valid email address.'
+}
+
 // questions ==================================================
 const nextMember = 
 {
-    type:'list',
-    name:'newMember',
-    message:'What kind of team member would you like to add?',
-    choices: ['Manager','Engineer','Intern','No more team members to add']
+  type:'list',
+  name:'newMember',
+  message:'What kind of team member would you like to add?',
+  choices: ['Manager','Engineer','Intern','No more team members to add']
 }
 
 const manager = [
-    {
-        type:'input',
-        name:'name',
-        message:"What is your manager's name?",
-    },
-    {
-        type:'input',
-        name:'id',
-        message:"What is your manager's id?",
-    },
-    {
-        type:'input',
-        name:'email',
-        message:"What is your manager's email?",
-    },
-    {
-        type:'input',
-        name:'office',
-        message:"What is your manager's office number?",
-    }
+  {
+    type:'input',
+    name:'name',
+    message:"What is your manager's name?",
+    validate: onlyLetters
+  },
+  {
+    type:'input',
+    name:'id',
+    message:"What is your manager's id?",
+    default: 'na'
+  },
+  {
+    type:'input',
+    name:'email',
+    message:"What is your manager's email?",
+    validate: emailFormat
+  },
+  {
+    type:'input',
+    name:'office',
+    message:"What is your manager's office number?",
+    default: 'na'
+  }
 ]
 
 const engineer = [
-    {
-        type:'input',
-        name:'name',
-        message:"What is your engineer's name?",
-    },
-    {
-        type:'input',
-        name:'id',
-        message:"What is your engineer's id?",
-    },
-    {
-        type:'input',
-        name:'email',
-        message:"What is your engineer's email?",
-    },
-    {
-        type:'input',
-        name:'github',
-        message:"What is your engineer's Github username?",
-    }
+  {
+    type:'input',
+    name:'name',
+    message:"What is your engineer's name?",
+    validate: onlyLetters
+  },
+  {
+    type:'input',
+    name:'id',
+    message:"What is your engineer's id?",
+    default: 'na'
+  },
+  {
+    type:'input',
+    name:'email',
+    message:"What is your engineer's email?",
+    validate: emailFormat
+  },
+  {
+    type:'input',
+    name:'github',
+    message:"What is your engineer's Github username?",
+    validate: cannotBeBlank
+  }
 ]
 
 const intern = [
-    {
-        type:'input',
-        name:'name',
-        message:"What is your intern's name?",
-    },
-    {
-        type:'input',
-        name:'id',
-        message:"What is your intern's id?",
-    },
-    {
-        type:'input',
-        name:'email',
-        message:"What is your intern's email?",
-    },
-    {
-        type:'input',
-        name:'school',
-        message:"What is your intern's school?",
-    }
+  {
+    type:'input',
+    name:'name',
+    message:"What is your intern's name?",
+    validate: onlyLetters
+  },
+  {
+    type:'input',
+    name:'id',
+    message:"What is your intern's id?",
+    default: 'na'
+  },
+  {
+    type:'input',
+    name:'email',
+    message:"What is your intern's email?",
+    validate: emailFormat
+  },
+  {
+    type:'input',
+    name:'school',
+    message:"What is your intern's school?",
+    validate: cannotBeBlank
+  }
 ]
+
 const questions = {Manager:manager, Engineer:engineer, Intern:intern}
 
 // inquirer ===================================================
 
+// begin application
+function beginApp() {
+  console.log('Please build your team');
+  newMemberChoice();
+}
+
+beginApp();
+
 // asks user what team member they'd like to add next
 function newMemberChoice() {
-    inquirer.prompt(nextMember).then(answer => {
-        (answer.newMember !== 'No more team members to add') ?
-            newMemberQuestions(answer.newMember): 
-            fs.writeFile('./output/team.html',render(teamMembers),(err,data) => {
-                if (err) throw err;
-                console.log('I present to you: the Dream Team');
-            });
-    })
+  inquirer.prompt(nextMember).then(answer => {
+    if (answer.newMember !== 'No more team members to add') {
+      newMemberQuestions(answer.newMember)
+    } else {
+      fs.writeFile(outputPath,render(teamMembers),err => {
+        if (err) throw err;
+        console.log('I present to you: the Dream Team');
+      });
+    }
+  })
 }
 
 // asks user team member specific questions
 function newMemberQuestions(choice) {
-    inquirer.prompt(questions[choice]).then(answer => {
-        newObjects(answer,choice);
-    })
+  inquirer.prompt(questions[choice]).then(answer => {
+    newObjects(answer,choice);
+  })
 }
 
 // create new objects from user responses
 function newObjects(person,choice) {
-    let addToTeam;
-    switch (choice) {
-        case 'Manager':
-            addToTeam = new Manager(person.name,person.id,person.email,person.office);
-            break;
-        case 'Intern':
-            addToTeam = new Intern(person.name,person.id,person.email,person.school)
-            break;
-        case 'Engineer':
-            addToTeam = new Engineer(person.name,person.id,person.email,person.github)
-            break;
-    }
-    teamMembers.push(addToTeam)
-    newMemberChoice();
+  let addToTeam;
+  switch (choice) {
+    case 'Manager':
+      addToTeam = new Manager(person.name,person.id,person.email,person.office);
+      break;
+    case 'Intern':
+      addToTeam = new Intern(person.name,person.id,person.email,person.school)
+      break;
+    case 'Engineer':
+      addToTeam = new Engineer(person.name,person.id,person.email,person.github)
+      break;
+  }
+  teamMembers.push(addToTeam)
+  newMemberChoice();
 }
-
-// begin application
-function beginApp() {
-    if (teamMembers.length === 0) {
-        console.log('Please build your team');
-    }
-    newMemberChoice();
-}
-
-beginApp();
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
