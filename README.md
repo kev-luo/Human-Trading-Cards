@@ -1,5 +1,5 @@
 
-# Human-Trading-Cards
+# Employee Displays
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![GitHub top language](https://img.shields.io/github/languages/top/kev-luo/Human-Trading-Cards)
 
