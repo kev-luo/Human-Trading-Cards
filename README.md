@@ -1,7 +1,7 @@
 
-# Employee Displays
+# Employees Display
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![GitHub top language](https://img.shields.io/github/languages/top/kev-luo/Human-Trading-Cards)
+![GitHub top language](https://img.shields.io/github/languages/top/kev-luo/employeesDisplay)
 
 ## Description
 This application generates custom html files based on user input through a CLI. The rendered html page displays your team member's roles and contact information, sorted by role. The pre-defined tests given to us were helpful in creating the employee classes. The use of inheritance also makes creating new classes less tedious. Finally this application exposed me to some of the applications of regex: rendering custom files, and form validation for the CLI. 
@@ -31,5 +31,4 @@ Feel free to add or remove classes as you see fit.
 
 
 ## Questions
-![github profile pic](https://github.com/kev-luo.png?size=100)
 * [kvn.luo@gmail.com](kvn.luo@gmail.com)
